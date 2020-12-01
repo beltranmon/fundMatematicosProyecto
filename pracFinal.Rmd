@@ -1,13 +1,13 @@
 ---
-title: "Fundamentos  matemáticos  del  análisis  de  datos - Práctica Final"
+title: "Fundamentos  matemáticos  del  análisis  de  datos"
 author: "Beltrán Rodríguez-Mon"
 output: 
-  html_document: default
   pdf_document:
     toc: true
-    toc_depth: 1
+    toc_depth: 2
     number_sections: false
-subtitle: PracticaFinal
+  html_document: default
+subtitle: Practica Final
 ---
 
 ```{r setup, include=FALSE}
@@ -29,34 +29,34 @@ fdata <- read.table(file = 'data/Telco-Customer-Churn.csv', sep= ',', header = T
 #DataExplorer::create_report(fdata) #Este paquete se ha ejecutado antes de realizar este informe para sacar de forma automática un análisis exploratorio básico del set de datos para obtener imágenes utilizadas durante este informe.
 ```
 
- El set de datos a tratar contiene información de clientes de un Proveedor de servicois de telecomunicaciones tales como telefonía, Internet...
+ El set de datos a tratar contiene información de clientes de un Proveedor de servicois de telecomunicaciones tales como telefonía, Internet... De forma muy básica, el set de datos tiene la siguiente estructura:
   
- ![Raw Data](img/info_basica.png)  
+ ![](img/info_basica.png)  
  
- El set de datos contiene información tal como información personal del cliente, los servicios que tiene contratados o los gastos que éstos le generan.
+  El set de datos contiene información tal como información personal del cliente, los servicios que tiene contratados o los gastos que éstos le generan.
  Las variables de este conjunto de datos son:  
  
  * customerID -> Customer ID
- * gender -> Whether the customer is a male or a female
- * SeniorCitizen -> Whether the customer is a senior citizen or not (1, 0)
- * Partner -> Whether the customer has a partner or not (Yes, No)
- * Dependents -> Whether the customer has dependents or not (Yes, No)
- * tenure -> Number of months the customer has stayed with the company
- * PhoneService -> Whether the customer has a phone service or not (Yes, No)
- * MultipleLines -> Whether the customer has multiple lines or not (Yes, No, No phone service)
- * InternetService -> Customer’s internet service provider (DSL, Fiber optic, No)
- * OnlineSecurity -> Whether the customer has online security or not (Yes, No, No internet service)
- * OnlineBackup -> Whether the customer has online backup or not (Yes, No, No internet service)
- * DeviceProtection -> Whether the customer has device protection or not (Yes, No, No internet service)
- * TechSupport -> Whether the customer has tech support or not (Yes, No, No internet service)
- * StreamingTV -> Whether the customer has streaming TV or not (Yes, No, No internet service)
- * StreamingMovies -> Whether the customer has streaming movies or not (Yes, No, No internet service)
- * Contract -> The contract term of the customer (Month-to-month, One year, Two year)
- * PaperlessBilling -> Whether the customer has paperless billing or not (Yes, No)
- * PaymentMethod -> The customer’s payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))
- * MonthlyCharges -> The amount charged to the customer monthly
- * TotalCharges -> The total amount charged to the customer
- * Churn -> Whether the customer churned or not (Yes or No)
+ * gender -> Género del cliente
+ * SeniorCitizen -> Indicador de si el cliente está jubilado
+ * Partner -> Indicador de si el cliente tiene pareja
+ * Dependents -> Indicador de si el cliente tiene a otros a su cargo
+ * tenure -> Número de meses que el cliente ha estado en la compañía
+ * PhoneService -> Indicador de si el cliente tiene el servicio de telefonía
+ * MultipleLines -> Indicador de si el cliente tiene múltiples líneas de telefonía (Yes, No, No phone service)
+ * InternetService -> Tipo de servicio de Internet contratado (DSL, Fiber optic, No)
+ * OnlineSecurity -> Indicador de si el cliente tiene contratado un servicio de Seguridad (Yes, No, No internet service)
+ * OnlineBackup -> Indicador de si el cliente tiene contratado un servicio de Backup (Yes, No, No internet service)
+ * DeviceProtection -> Indicador de si el cliente tiene contratado un servicio de protección del dispositivo (Yes, No, No internet service)
+ * TechSupport -> Indicador de si el cliente tiene contratado el servicio técnico (Yes, No, No internet service)
+ * StreamingTV -> Indicador de si el cliente tiene contratado un servicio de Streaming TV (Yes, No, No internet service)
+ * StreamingMovies -> Indicador de si el cliente tiene contratado un servicio de películas (Yes, No, No internet service)
+ * Contract -> Tipo de contrato del cliente (Month-to-month, One year, Two year)
+ * PaperlessBilling -> Indicador de si el cliente tiene factura electrónica (Yes, No)
+ * PaymentMethod -> Modo de pago del cliente (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic))
+ * MonthlyCharges -> Cargo mensual
+ * TotalCharges -> Pago total del cliente durante su contrato
+ * Churn -> Indicador de si el cliente ha abandonado la compañía (Yes or No)
 
 ```{r echo=TRUE, tidy=TRUE}
 summary(fdata)
@@ -72,13 +72,14 @@ dim(fdata)
 ```{r}
 all(complete.cases(fdata))
 ```
- Tenemos valores nulos, que los eliminaremos más adelante para tener el set de datos lo más limpio posible
+ Tenemos valores nulos, que los eliminaremos más adelante para tener el set de datos lo más limpio posible.
  
 \newpage
 
 # Primer análisis de las variables
 
- El primer paso realizado anterior al análisis de las variables ha sido el filtrado de éstas. Se ha eliminado la columna 'customerID' dado que cada valor es único para cada cliente y no tiene ningún valor. Además se filtrarán aquellas filas en las que falten valores, para tener los datos con la mejor estructura posible. Además, vamos a aplicar la función *as.factor()* en las columnas de valor discreto para trabajar con éstas.
+ El primer paso realizado anterior al análisis de las variables ha sido el filtrado de éstas. Se ha eliminado la columna 'customerID' dado que cada valor es único para cada cliente y no tiene ninguna utilidad. Además se filtrarán aquellas filas en las que falten valores, para tener los datos con la mejor estructura posible. 
+ Por otro lado, vamos a aplicar la función *as.factor()* en las columnas de valor discreto para trabajar con éstas.
  
 ```{r}
 fdata = fdata[,2:21]
@@ -100,17 +101,19 @@ glimpse(fdata)
  
  El set de variables consta de dos tipos principales: Variables continuas (tenure, MonthlyCharges, TotalCharges) y discretas, por lo que tendremos que considerar esta estructura a la hora de trabajar con el conjunto de datos.
  
- ![Hist vbles continuas](img/hist_continuas.png)  
+ ![](img/hist_continuas.png)  
 
- ![Barchar vbles discretas](img/barchart_discretas1.png)  
+ ![](img/barchart_discretas1.png)  
   
- ![Barchar vbles discretas](img/barchart_discretas2.png)  
+ ![](img/barchart_discretas2.png)  
 
  Para conocer la relación entre variables se ha representado de forma gráfica las correlaciones entre ellas:
 
- ![Matriz Corr](img/corr.png)  
+ ![](img/corr.png)  
 
  Se observa que hay muy poca relación entre las variables, de forma que cada una de ellas asemejan ser suficientemente representativas e importantes para definir las distintas características de cada uno de los clientes.
+ 
+ *La mayoría de las variables que tienen correlación '1' fuera de la diagonal principal son dependientes entre ellas (por ejemplo, el par de variables [MultipleLines_NoPhoneService; PhoneService_No]).
  
 \newpage 
  
@@ -158,13 +161,13 @@ disp +
   geom_smooth(aes(x=tenure,y=MonthlyCharges),method = "lm", fill="red")
 ```
 
- Mirando solo el diagrama de dispersion se ve que están bastante relacionadas, dado que la línea representada no es horizontal. También podemos conocer de forma más 'analítica' si ambas variables están relacionadas utilizando el **Test Chi Cuadrado**.
+ Mirando solamente el diagrama de dispersión se ve que están bastante relacionadas, dado que la línea representada no es horizontal. También podemos conocer de forma más 'analítica' si ambas variables están relacionadas utilizando el **Test Chi Cuadrado**.
  
 ```{r}
 chisq.test(fdata$tenure, fdata$MonthlyCharges)
 ```
 
-  Como el p-Valor es muy pequeño por lo que se rechaza H0, siendo esta que son independientes. Hay relacion entre la permanencia de un cliente y lo que paga al mes; en concreto, cuantos más meses está un cliente, más paga al mes, lo que puede significar que los clientes tienden o a mantener sus contratos (aunque sean altos) dado que los servicios les convencen, o que los van aumentando cuanto más tiempo lleven en la compañía.
+  El p-Valor es muy pequeño por lo que se rechaza H0, siendo esta que son independientes. Hay relación entre la permanencia de un cliente y lo que paga al mes; en concreto, cuantos más meses está un cliente, más paga al mes, lo que puede significar que los clientes tienden o a mantener sus contratos (aunque sean altos) dado que los servicios les convencen, o que los van aumentando cuanto más tiempo lleven en la compañía.
 
 \newpage
   
@@ -200,8 +203,8 @@ dim(fibra_1anho)
 ggplot(fibra_1anho, aes(x = Partner, y = MonthlyCharges)) +
   geom_boxplot(fill = "#4271AE", colour = "#1F3552", alpha = 0.5, outlier.colour = "#1F3552", outlier.shape = 20) +
   scale_x_discrete(name = "Churn") +
-  scale_y_continuous(name = "MonthlyCharges") +
-  ggtitle("Gasto mensual de los clientes según si han abandonado la compañía") + 
+  scale_y_continuous(name = "Partner") +
+  ggtitle("Gasto mensual de los clientes según si tienen pareja") + 
   theme_minimal()
 ```
 
@@ -211,7 +214,8 @@ ggplot(fibra_1anho, aes(x = Partner, y = MonthlyCharges)) +
 
 ```{r}
 ggplot(fibra_1anho) + 
-  geom_density(aes(x=MonthlyCharges))
+  geom_density(aes(x=MonthlyCharges)) +
+  ggtitle("Gráfico de densidad de los gastos mensuales")
 ```
 
 Vemos que se genera una distribución asimétrica hacia la derecha, de forma que esta variable no sigue una distribución **Normal**, como podemos demostrar analizando la normalidad de la misma, tanto gráficamente
@@ -230,8 +234,10 @@ shapiro.test(fibra_1anho$MonthlyCharges)
  donde el p-valor obtenido del contraste de hipotesis Shapiro demuestra que hay que rechazar H0 (normalidad).
 
  Por último, sobre este subset generado, vamos a crear una nueva variable ('ChargeType') que divida el set de clientes de fibra en 2: 
+ 
  * Clientes que paguen más de la media : 'High'
  * Clientes que paguen menos de la media: 'Low'
+ 
  Para que en un futuro se puedan diferenciar más fácilmente, facilitando acciones como hacerles ofertas para mantener a los que más pagan, premiarles por esto...
  
 ```{r}
@@ -255,7 +261,6 @@ fibra_1anho_high = fibra_1anho %>%
 
 mosaicplot(Partner ~ Dependents, data = fibra_1anho_high,color = "skyblue2",
            border = "chocolate")
-#addmargins(table(fibra_1anho$Contract, fibra_1anho$gender))
 addmargins(prop.table(table(fibra_1anho_high$Partner, fibra_1anho_high$Dependents)))
 ```
 
@@ -286,14 +291,17 @@ fdata %>%
 ```
  
   Con esta tabla de frecuencias relativas, obtenemos que las probabilidades de abandono según el contrato es:
+  
   * P(abandono|mes-a-mes): 42.7%
   * P(abandono|1-año): 11.3%
   * P(abandono|2-años): 2.8%
+  
   Siendo los casos opuestos el valor complementario del mostrado.
   
-  La compañía parece tener un grave problema con los contratos *Mes-a-mes*, dado que casi la mitad de clientes abandonan la compañía. Aún así también es interesante conocer si esos clientes que abandonan al acabar el mes es porque se aprovechan de que la duración es muy corta o simplemente tienen ese contrato, pero se van tras un **largo tiempo** (tenure) con los servicios contratados.
+  La compañía parece tener un grave problema con los contratos *Mes-a-mes*, dado que casi la mitad de clientes que han tenido este contrato han acabado abandonando la compañía. Aún así también es interesante conocer si esos clientes que abandonan al acabar el mes es porque se aprovechan de que la duración es muy corta o simplemente tienen ese contrato, pero se van tras un **largo tiempo** (tenure) con los servicios contratados.
   
   Para calcular esto, nos quedaremos con los clientes con contrato mes a mes y que sí abandonan la compañía, dividiéndolos en dos subgrupos:
+  
   * LLevan más de un año: "Long"
   * Llevan menos de un año: "Short"
   
@@ -311,7 +319,9 @@ leavers %>%
 ```
 
  Con esta información sabemos que la probabilidad de que un cliente con contrato *Mes-a-mes* que abandonó la compañía lo hubiera hecho llevando menos de un año es:
+ 
  P(Corta_duración|[mes-a-mes + abandono]): 38.1% (sobre el 42.7% anterior)
+ 
  Número todavía alto, pero menos preocupante que el casi 43% calculado anteriormente.
  
 \newpage
@@ -325,6 +335,7 @@ leavers %>%
  En la compañía tienen el interés de eliminar los servicios de pago que no se realizan de forma automática, y su principal preocupación es que haya clientes que si les quitan este servicio no se pasen al sistema automático, sino que se den de baja de la compañía. Para esto, quieren cercionarse de que el sistema de pago sí que influye en lo que se paga al mes, y además que lo hace generando un mayor dinero para la compañía que los métodos automáticos.
  
  De esta forma, agrupamos los 4 métodos existentes en 2, como se ha explicado:
+ 
  * Método automático: *Bank transfer* y *Credit card*
  * Método manual: *Mailed check* y *Electronic check*
 
@@ -351,7 +362,7 @@ t.test(manual_transfer$MonthlyCharges)$conf.int
 
 ## Comparativa de clientes mediante tests de hipótesis
 
- Por otro lado, la compañía también estudia no seguir contratando el equipo de servicio técnico que ahora mismo, puesto que consideran que en caso de que los clientes con este servicio no puedan asegurar una permanencia alta no les saldría rentable el coste de contratación del equipo. 
+ Por otro lado, la compañía también estudia no seguir contratando el equipo de servicio técnico que tiene ahora mismo, puesto que consideran que en caso de que los clientes con este servicio no puedan asegurar una permanencia alta no les saldría rentable el coste de contratación del equipo. 
  Desde dentro de la organización han asegurado que en el pasado la media de permanencia de los clientes es de unos 3 años (36 meses), por lo que nuestro estudio se realizará considerando este valor, para ver si para las dos variantes deberíamos quedarnos con el servicio técnico.
 
 ```{r}
@@ -366,8 +377,10 @@ t.test(without_support$tenure, alternative = "greater", mu=36)
 ```
 
  Los resultados obtenidos son los siguientes:
+ 
  * Para el caso de clientes con Soporte Técnico, se rechaza la hipótesis nula, siendo la alternativa que la permanencia es mayor
  * Para los clientes sin Soporte Técnico, no se puede rechazar la hipótesis nula
+ 
  Con esos resultados, parece ser que no solamente los clientes con el servicio contratado tienen una permanencia alta, justificando así a la compañía la contratación del personal de Soprte, sino que además parece ser un factor diferenciador para aumentar la permanencia de los clientes, a diferencia de aquellos que no contrataron este servicio.
 
 \newpage
@@ -375,6 +388,7 @@ t.test(without_support$tenure, alternative = "greater", mu=36)
 # Modelo de Regresión linear entre el gasto y la permanencia
 
  El último paso en este análisis de datos sobre los clientes del ISP será estudiar la posibilidad de hacer un modelo de **Regresión Lineal Simple** en dos dimensiones para responder al siguiente concepto:
+ 
  > Predecir la **Permanencia** de un cliente según su gasto mensual
  
  Este estudio resulta interesante porque un problema de las compañías es que los clientes nuevos (que la única 'variable' que ellos ven es la del *Coste Mensual*) se queden poco tiempo, de forma que todo el gasto que hacen en la instalación en las casas de los clientes y en el equipo que les tienen que proporcionar (routers, decodificadores...) les genera un gasto considerable en comparación con lo que ingresan.
@@ -383,13 +397,15 @@ t.test(without_support$tenure, alternative = "greater", mu=36)
 
 ```{r}
 disp = ggplot(fdata) +
-  geom_point(aes(x=MonthlyCharges, y=tenure))
+  geom_point(aes(x=MonthlyCharges, y=tenure)) +
+  labs(title="Permanencia del cliente según su gasto mensual", 
+       x="MonthlyCharges", y="tenure")
 
 disp + 
   geom_smooth(aes(x=MonthlyCharges,y=tenure),method = "lm", fill="red")
 ```
 
- Vemos que a medida de que aumenta el gasto mensual, aumenta el número de meses que se mantiene un cliente en la compañía. Aún así, no se puede poner el precio extremadamente alto porque supondría una grandísima barrera de entrada a potenciales clientes que podría acabar con la empresa.
+ Vemos que a medida que aumenta el gasto mensual, aumenta el número de meses que se mantiene un cliente en la compañía. Aún así, no se puede poner el precio extremadamente alto porque supondría una grandísima barrera de entrada a potenciales clientes que podría acabar con la empresa.
  
  Ahora observemos el modelo lineal generado con estas variables:
 
@@ -398,6 +414,7 @@ disp +
 ```
  
  Se establece la ecuación de una recta
+ 
  > Y = 0.2014*X + 19.3715
  
  Pero lo que debemos hacer es comprobar si este modelo es válido. La población ha de cumplir ciertas condiciones que se prueban con las siguientes figuras y que se explicarán en orden.
