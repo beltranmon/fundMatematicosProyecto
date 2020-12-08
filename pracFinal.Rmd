@@ -29,7 +29,7 @@ fdata <- read.table(file = 'data/Telco-Customer-Churn.csv', sep= ',', header = T
 #DataExplorer::create_report(fdata) #Este paquete se ha ejecutado antes de realizar este informe para sacar de forma automática un análisis exploratorio básico del set de datos para obtener imágenes utilizadas durante este informe.
 ```
 
- El set de datos a tratar contiene información de clientes de un Proveedor de servicois de telecomunicaciones tales como telefonía, Internet... De forma muy básica, el set de datos tiene la siguiente estructura:
+ El set de datos a tratar contiene información de clientes de un Proveedor de servicios de telecomunicaciones tales como telefonía, Internet... De forma muy básica, el set de datos tiene la siguiente estructura:
   
  ![](img/info_basica.png)  
  
