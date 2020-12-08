@@ -2,11 +2,11 @@
 title: "Fundamentos  matemáticos  del  análisis  de  datos"
 author: "Beltrán Rodríguez-Mon"
 output: 
+  html_document: default
   pdf_document:
     toc: true
     toc_depth: 2
     number_sections: false
-  html_document: default
 subtitle: Practica Final
 ---
 
